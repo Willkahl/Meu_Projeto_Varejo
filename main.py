@@ -51,7 +51,7 @@ print(f" {df.shape[1]} colunas")
 
 # =========================================================================
 # SPRINT 2 - TRATAMENTO DOS DADOS (STRING, NUMÉRICOS, DATAS)
-# 
+# Tratamento dos dados para garantir que as colunas estejam no formato correto, convertendo colunas de string para o tipo string, colunas numéricas para o tipo numérico e colunas de data para o tipo datetime, além de padronizar os valores de string para facilitar a análise posterior.
 # =========================================================================
 
 print("\n [SPRINT 2] - Tratamento dos Dados (String, Numéricos, Datas)")
@@ -74,3 +74,62 @@ print("\n Tipos de dados após tratamento:")
 print(df.dtypes.to_string())
 print(f"\n Valores nulos por coluna após tratamento:\n{df.isnull().sum()}")
 print(f"\n Datas invalidas (NaT) detectadas após tratamento: {df['DATA'].isna().sum()}")
+
+
+# =========================================================================
+# SPRINT 3 - IDENTIFICAÇÃO E LIMPEZA DE NULOS E DUPLICADAS
+# =========================================================================
+
+print("\n [SPRINT 3] - Identificação e Limpeza de Nulos e Duplicadas")
+
+# --- Problema 1: valores nulos por coluna
+print(f"\n Valores nulos por coluna (antes da limpeza):")
+nulos = df.isnull().sum()
+print(nulos.to_string())
+
+
+# --- Problema 2: Linhas duplicadas
+duplicadas = df.duplicated().sum()
+print(f"\n Linhas duplicadas encontradas: {duplicadas:,}")
+
+# --- Problema 3: categoria com valor inválido '#N/D'
+categoria_invalida = (df["PR_CAT"] == "#N/D").sum()
+print(f"\n Registros com PR_CAT = '#N/D': {categoria_invalida:,}")
+
+# --- Limpeza dos dados: remoção de linhas duplicadas e substituição de valores inválidos na coluna PR_CAT por NaN.
+
+# Limpeza 1: Tratar categorias inválidas com "SEM CATEGORIA"
+# Justificativa: '#N/D' é um marcador de dado ausente (equivalente ao nulo do Excel exportado).
+# Dessa forma, imputar 'SEM CATEGORIA' preserva os registros de compra (que tem cliente, data e produto válidos)
+# mantendo a integridade dos dados para análises futuras, sem excluir registros potencialmente valiosos.
+df["PR_CAT"] = df["PR_CAT"].apply(
+    lambda x: "SEM CATEGORIA" if x in ("#N/D", "", "NAN", "NONE") else x
+)
+print(f"\n  Categorias após limpeza: {df['PR_CAT'].unique().tolist()}")
+
+# Limpeza 2: Remover linhas com DATA inválida (NaT)
+# Justificativa: sem data de compra, não é possível imputar um valor confiável.
+# O registro perde utilizada em análises temporais e de comportamento de compra, portanto, a remoção é a melhor opção para manter a qualidade dos dados.
+linhas_antes = len(df)
+df = df.dropna(subset=["DATA"], inplace=False)
+datas_removidas = linhas_antes - len(df)
+print(f"\n Linhas removidas por DATA inválida: {datas_removidas:,}")
+
+
+# Limpeza 3: Eliminar linhas 100% duplicadas
+# Justificativa: o mesmo cliente, comprando o mesmo produto, na mesma data e compra (CO_ID),
+# é um item de duplicação de dados, não uma compra dupla.
+df.drop_duplicates(inplace=True)
+print(f"\n Linhas após remoção de duplicadas: {len(df):,}")
+
+
+#Validação do identificador de compra (CO_ID) para garantir que cada compra seja única, verificando se há CO_ID duplicados.
+# Regra de negócio: CO_ID deve ser inteiro positivo (> 0)
+invalidos_coid = (df["CO_ID"] <= 0).sum()
+print(f"\n  CO_ID inválidos (<= 0): {invalidos_coid}")
+print(f" Intervalo de CO_ID : {df['CO_ID'].min()} a {df['CO_ID'].max()}")
+print(f" Compras únicas (CO_ID distintos): {df['CO_ID'].nunique()}")
+
+print(f"\n Base limpa: {len(df):,} registros | {df.shape[1]} colunas")
+print(f" Período coberto: {df['DATA'].min().date()} a {df['DATA'].max().date()}")
+
