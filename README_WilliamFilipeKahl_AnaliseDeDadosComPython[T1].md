@@ -76,6 +76,10 @@ Métrica | Descrição
 - Criação de uma base limpa em formato .csv para eventual utilização
 
 
+## --- Conclusões e Insights Finais
+- As informações analisadas após execução do script estão descritas na etapa de conclusões e insights contêndo
+ os principais pontos de atenção do relatório.
+
 
 ## --- Pré-requisitos
 - Python 3.8 ou superior

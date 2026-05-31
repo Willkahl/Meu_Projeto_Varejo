@@ -259,4 +259,46 @@ df_limpo.to_csv("Base_Varejo_Limpa.csv", index=False, sep=SEP, encoding="utf-8")
 print("\n Relatório final exportado para Base_Varejo_Limpa.csv")
 
 
+# =========================================================================
+# CONCLUSÕES E INSIGHTS FINAIS
+# =========================================================================
 
+print("\n Conclusões e Insights Finais")
+
+genero_mais_comprou = ag_genero.iloc[0]
+categoria_lider = ag_categoria.iloc[0]
+
+print(f"""
+      1. QUALIDADE DOS DADOS
+          A base original continha {duplicadas:,} linhas duplicadas e {categoria_invalida:,} 
+          registros com categoria '#N/D', tratados como "SEM CATEGORIA'.
+          A limpeza reduziu a base para {len(df):,} registros válidos.
+
+      2. PERFIL DO GÊNERO
+         O gênero  '{genero_mais_comprou['CL_GENERO']}' lidera em volume de itens comprados
+         {genero_mais_comprou['Quantidade de Itens']:,}. Isso pode indicar oportunidades
+          para campanhas segmentas por gênero.
+          
+      3. CATEGORIA MAIS VENDIDA
+         A '{categoria_lider['PR_CAT']}' é a categoria lider ({categoria_lider['Quantidade de Itens']:,} itens).
+         Estratégias de estoque e promoção devem priorizar essa categoria para maximizar vendas.
+
+      4. PERFIL DE FILHOS POR CLIENTES
+         Média de {media:.2f} filhos por cliente (moda: {moda[0]}). A maioria 
+         dos clientes tem {moda[0]} filho(s), orientando segmentação e seleção
+          de categorias a promover (ex: PET, ALIMENTOS vs. INFANTIL).
+        
+      5. SAZONALIDADE
+         Período analisado:  {df['DATA'].min().date()} a {df['DATA'].max().date()}.
+         A análise por Ano-Mês identifica picos de damanda - útil para
+         planejamento de abastecimento e ações de marketing
+
+      6. PROBLEMAS REMANESCENTES
+         - 'SEM CATEGORIA' ainda presente: necessário enriquecer com 
+         dados de origem para classificação corretas dos produtos.
+         - A ausência de uma coluna com valor/preço impede análises 
+         de receita e ticket médio, recomendando futura inclusão.
+         - Sem dados de devolução/cancelamento para analisar se
+         as vendas são menores do que o volume bruto indicou.
+
+         end=""")
