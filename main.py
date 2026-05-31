@@ -133,3 +133,44 @@ print(f" Compras únicas (CO_ID distintos): {df['CO_ID'].nunique()}")
 print(f"\n Base limpa: {len(df):,} registros | {df.shape[1]} colunas")
 print(f" Período coberto: {df['DATA'].min().date()} a {df['DATA'].max().date()}")
 
+
+# =========================================================================
+# SPRINT 4 - ESTATÍSTICAS DESCRITIVAS
+# =========================================================================
+
+print("\n [SPRINT 4] - Estatísticas Descritivas - Número de Filhos (CL_FHL)")
+
+# CL_FHL tem uma linha por item comprado (não por cliente).
+# Portanto, a média de filhos por compra é diferente da média de filhos por cliente.
+# Para estatísticas de perfil do cliente usamos 1 registro por CL_ID.
+filhos_por_cliente = df.drop_duplicates(subset=["CL_ID"])["CL_FHL"]
+
+media = filhos_por_cliente.mean()
+mediana = filhos_por_cliente.median()
+desvio = filhos_por_cliente.std()
+moda = filhos_por_cliente.mode().tolist()
+maximo = filhos_por_cliente.max()
+minimo = filhos_por_cliente.min()
+contagem = filhos_por_cliente.count()
+q1 = filhos_por_cliente.quantile(0.25)
+q2 = filhos_por_cliente.quantile(0.50)
+q3 = filhos_por_cliente.quantile(0.75)
+
+print(f"\n clientes únicos analisados: {contagem:,}")
+print(f" Média de filhos por cliente: {media:.4f}")
+print(f" Mediana de filhos por cliente: {mediana:.1f}")
+print(f" Desvio padrão de filhos por cliente: {desvio:.4f}")
+print(f" Moda de filhos por cliente: {moda}")
+print(f" Máximo de filhos por cliente: {maximo}")
+print(f" Mínimo de filhos por cliente: {minimo}")
+print(f" Quartil 1 de filhos por cliente: {q1:.1f}")
+print(f" Quartil 2 de filhos por cliente: {q2:.1f}")
+print(f" Quartil 3 de filhos por cliente: {q3:.1f}")
+
+# Visualização da distribuição de filhos por cliente, utilizando uma barra proporcional ao número de clientes para cada quantidade de filhos.
+print("\n Distribuição de filhos (clientes únicos):")
+dist_filhos = filhos_por_cliente.value_counts().sort_index()
+for qtd_filhos, n in dist_filhos.items():
+    barra = "*" * (n * 30 // dist_filhos.max())  # escala de 1 asterisco para o total de clientes
+    print(f" {qtd_filhos} filhos: {n:>5,} clientes {barra}")
+
