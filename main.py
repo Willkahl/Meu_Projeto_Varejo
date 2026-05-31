@@ -301,4 +301,4 @@ print(f"""
          - Sem dados de devolução/cancelamento para analisar se
          as vendas são menores do que o volume bruto indicou.
 
-         end=""")
+         """)
