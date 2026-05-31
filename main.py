@@ -174,3 +174,89 @@ for qtd_filhos, n in dist_filhos.items():
     barra = "*" * (n * 30 // dist_filhos.max())  # escala de 1 asterisco para o total de clientes
     print(f" {qtd_filhos} filhos: {n:>5,} clientes {barra}")
 
+
+
+# =========================================================================
+# SPRINT 5 - RELATÓRIO E DOCUMENTAÇÃO
+# =========================================================================
+
+print("\n [SPRINT 5] - Relatório e Documentação")
+
+# Agrupameento 1: Itens comprados por Gênero
+print("\n [AG-1] Total de itens comprados por Gênero:")
+ag_genero = (df.groupby("CL_GENERO")["CO_ID"]
+             .count()
+             .reset_index()
+             .rename(columns={"CO_ID": "Quantidade de Itens"})
+             .sort_values("Quantidade de Itens", ascending=False)
+)
+print(ag_genero.to_string(index=False))
+
+
+# Agrupamento 2: Itens comprados por Categoria de Produto
+print("\n [AG-2] Total de itens comprados por Categoria de Produto:")
+ag_categoria = (df.groupby("PR_CAT")["CO_ID"]
+                 .count()
+                 .reset_index()
+                 .rename(columns={"CO_ID": "Quantidade de Itens"})
+                 .sort_values("Quantidade de Itens", ascending=False)
+)
+print(ag_categoria.to_string(index=False))
+
+
+# Agrupamento 3:  Pivot Gênero x Categoria de Produto
+print("\n [AG-3] Total de itens comprados: Gênero x Categoria de Produto:")
+pivot = pd.pivot_table(
+    df,
+    values="CO_ID",
+    index="CL_GENERO",
+    columns="PR_CAT",
+    aggfunc="count",
+    fill_value=0
+)
+print(pivot.to_string())
+
+
+# Agrupamento 4: Volume de compras por Ano-Mês (Top 10)
+print("\n [AG-4] Volume de compras por Ano-Mês (Top 10 períodos):")
+df["ANO_MES"] = df["DATA"].dt.to_period("M")
+ag_ano_mes = (df.groupby("ANO_MES")["CO_ID"]
+              .count()
+              .reset_index()
+              .rename(columns={"CO_ID": "Quantidade de Itens"})
+              .sort_values("Quantidade de Itens", ascending=False)
+              .head(10)
+)
+print(ag_ano_mes.to_string(index=False))
+
+
+# Agrupamento 5: Top 10 produtos mais comprados
+print("\n [AG-5] Top 10 produtos mais comprados:")
+ag_produtos = (df.groupby("PR_NOME")["CO_ID"]
+               .count()
+               .reset_index()
+               .rename(columns={"CO_ID": "Quantidade de Itens"})
+               .sort_values("Quantidade de Itens", ascending=False)
+               .head(10)
+)
+print(ag_produtos.to_string(index=False))
+
+
+# Agrupamento 6: Clientes únicos por Segmento
+print("\n [AG-6] Clientes únicos por Segmento:")
+ag_segmento = (df.groupby("CL_SEG")["CL_ID"]
+              .count()
+              .reset_index()
+              .rename(columns={"CL_ID": "Clientes Únicos"})
+              .sort_values("Clientes Únicos", ascending=False)
+)
+print(ag_segmento.to_string(index=False))
+
+
+# Exportação do relatório final para um arquivo CSV, contendo a base limpa
+df_limpo = df.drop(columns=["ANO_MES"])  # remover coluna auxiliar de agrupamento
+df_limpo.to_csv("Base_Varejo_Limpa.csv", index=False, sep=SEP, encoding="utf-8")
+print("\n Relatório final exportado para Base_Varejo_Limpa.csv")
+
+
+

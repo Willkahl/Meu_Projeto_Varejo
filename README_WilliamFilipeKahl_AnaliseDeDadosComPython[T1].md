@@ -62,16 +62,52 @@ Métrica | Descrição
 Inclui ainda uma distribuição visual do número de filhos por cliente
 
 
+## --- Sprint 5 - Relatório e Documentação
+- Análise da base de dados com aplicação de agrupamento de dados com groupby e pivottable com 6 visões distintas:
+
+Métrica | Descrição
+- Agrupamento 1 | Itens comprados por Gênero
+- Agrupamento 2 | Iens comprados por Categoria de Produto
+- Agrupamento 3 | Itens comprados: Gênero x Categoria
+- Agrupamento 4 | Total de compras por Ano e Mês
+- Agrupamento 5 | Top 10 produtos mais comprados
+- Agrupamento 6 | Clientes únicos por segmento
+
+- Criação de uma base limpa em formato .csv para eventual utilização
 
 
 
-## --- Tecnologias
-- Python
+## --- Pré-requisitos
+- Python 3.8 ou superior
 - Pandas
 - NumPy
 
 
+## --- Como Executar
+1. Certifique-se de que a base de dados 'Base Varejo.csv' está no caminho correto
+   (ajuste a variável 'base_dados' no início do script se necessário)
+
+
+## --- Base de Dados
+
+A base utilizada é um arquivo CSV com separador ';' e as seguintes colunas principais:
+
+| coluna | Descrição |
+| 'CO_ID' | Identificador da compra |
+| 'CL_ID' | Identificador do cliente |
+| 'PR_ID' | Identificador do produto |
+| 'DATA' | Data da compra ('dd/mm/yyyy') |
+| 'CL_GENERO' | Gênero do cliente |
+| 'CL_SEG' | Segmento do cliente |
+| 'CL_EC' | Estado civil (código) |
+| 'CL_FHL' | Número de filhos |
+|'PR_CAT' | Categoria de produto |
+|'PR_NOME' | Nome do produto |
+
+
+***O arquivo 'Base Varejo.csv' não está incluído neste repositório por conter dados sensíveis.***
 
 
 ## --- Autor
-William Filipe Kahl
+
+***William Filipe Kahl***
